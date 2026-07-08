@@ -1,20 +1,13 @@
+import 'package:flame/flame.dart';
+import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
+import '/game/Ball_Prototype.dart';
 
 void main() {
-  runApp(const MainApp());
-}
+  WidgetsFlutterBinding.ensureInitialized();
+  Flame.device.fullScreen();
 
-class MainApp extends StatelessWidget {
-  const MainApp({super.key});
+  final game = BallPrototype();
 
-  @override
-  Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: Scaffold(
-        body: Center(
-          child: Text('Hello World!'),
-        ),
-      ),
-    );
-  }
+  runApp(GameWidget(game: game));
 }
