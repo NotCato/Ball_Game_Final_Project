@@ -1,6 +1,10 @@
 import 'package:flame_forge2d/flame_forge2d.dart';
 
 class Ball extends BodyComponent {
+  Ball() {
+    debugMode = true;
+  }
+
   @override
   Body createBody() {
     // 1. Define as propriedades físicas do corpo.
@@ -18,7 +22,7 @@ class Ball extends BodyComponent {
     body.createFixtureFromShape(
       shape,
       density: 1.0,      // Densidade/Massa.
-      friction: 0.4,     // Atrito ao deslizar.
+      friction: 0.8,     // Atrito ao deslizar.
       restitution: 0.3,  // Bounciness (elasticidade/pulo).
     );
 

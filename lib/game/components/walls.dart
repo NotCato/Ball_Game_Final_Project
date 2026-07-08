@@ -1,10 +1,13 @@
 import 'package:flame_forge2d/flame_forge2d.dart';
 
 class Wall extends BodyComponent {
+  @override
   final Vector2 position;
   final Vector2 size;
 
-  Wall(this.position, this.size);
+  Wall(this.position, this.size) {
+    debugMode = true;
+  }
 
   @override
   Body createBody() {
