@@ -19,7 +19,7 @@ class Ball extends BodyComponent {
       shape,
       density: 1.0,      // Densidade/Massa.
       friction: 0.4,     // Atrito ao deslizar.
-      restitution: 0.6,  // Bounciness (elasticidade/pulo).
+      restitution: 0.3,  // Bounciness (elasticidade/pulo).
     );
 
     return body;

@@ -5,6 +5,8 @@ import 'package:sensors_plus/sensors_plus.dart';
 import 'components/ball.dart';
 import 'components/boundaries.dart';
 
+const double deadzone = 0.5;
+
 class BallPrototype extends Forge2DGame {
   // O StreamSubscription guarda a conexão com os sensores do celular.
   StreamSubscription<AccelerometerEvent>? _accelerometerSubscription;
@@ -40,14 +42,22 @@ class BallPrototype extends Forge2DGame {
       // -event.x: inclinar para a direita faz a bola cair para a direita.
       // event.y: inclinar para frente/trás faz a bola descer/subir na tela.
       // O multiplicador (2.0) deixa o movimento mais ágil e sensível.
-      world.gravity.setValues(-event.x * 2.0, event.y * 2.0);
+
+      double applyDeadzone(double value) {
+        if (value.abs() < deadzone) {
+          return 0.0;
+        } else {
+          return value;
+        }
+      }
+      world.gravity.setValues(-applyDeadzone(event.x) * 5.0, applyDeadzone(event.y) * 5.0);
     });
   }
 
-  @override
-  void onRemove() {
-    // IMPORTANTE: Sempre cancele o sensor para não gastar bateria/memória!
-    _accelerometerSubscription?.cancel();
-    super.onRemove();
+    @override
+    void onRemove() {
+      // IMPORTANTE: Sempre cancele o sensor para não gastar bateria/memória!
+      _accelerometerSubscription?.cancel();
+      super.onRemove();
+    }
   }
-}
