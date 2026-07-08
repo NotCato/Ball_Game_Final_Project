@@ -14,7 +14,7 @@ class BallPrototype extends Forge2DGame {
   BallPrototype()
       : super(
           // Gravidade inicial (Vector2(x, y)). Y positivo puxa para baixo.
-          gravity: Vector2(0, 10),
+          gravity: Vector2.zero(),
         );
 
   @override
@@ -43,6 +43,12 @@ class BallPrototype extends Forge2DGame {
       // event.y: inclinar para frente/trás faz a bola descer/subir na tela.
       // O multiplicador (2.0) deixa o movimento mais ágil e sensível.
 
+      print(
+        'x: ${event.x.toStringAsFixed(2)} '
+        'y: ${event.y.toStringAsFixed(2)} '
+        'z: ${event.x.toStringAsFixed(2)} '
+      );
+
       double applyDeadzone(double value) {
         if (value.abs() < deadzone) {
           return 0.0;
@@ -51,6 +57,7 @@ class BallPrototype extends Forge2DGame {
         }
       }
       world.gravity.setValues(-applyDeadzone(event.x) * 5.0, applyDeadzone(event.y) * 5.0);
+      print(world.gravity);
     });
   }
 

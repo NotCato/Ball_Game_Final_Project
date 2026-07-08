@@ -11,6 +11,9 @@ class Ball extends BodyComponent {
     final bodyDef = BodyDef(
       type: BodyType.dynamic, // Dynamic = afetado por forças e gravidade.
       position: Vector2(10, 20), // Posição inicial (em metros).
+      linearDamping: 0.5,  // Adiciona "atrito" com o ar/mesa para parar a bola.
+      angularDamping: 0.5, // Adiciona atrito na rotação.
+      allowSleep: false,   // Mantém a bola acordada para responder à gravidade.
     );
 
     final body = world.createBody(bodyDef);
@@ -22,7 +25,7 @@ class Ball extends BodyComponent {
     body.createFixtureFromShape(
       shape,
       density: 1.0,      // Densidade/Massa.
-      friction: 0.8,     // Atrito ao deslizar.
+      friction: 0.2,     // Atrito ao deslizar.
       restitution: 0.3,  // Bounciness (elasticidade/pulo).
     );
 
