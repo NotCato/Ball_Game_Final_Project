@@ -10,7 +10,7 @@ class Ball extends BodyComponent {
     // 1. Define as propriedades físicas do corpo.
     final bodyDef = BodyDef(
       type: BodyType.dynamic, // Dynamic = afetado por forças e gravidade.
-      position: Vector2(10, 20), // Posição inicial (em metros).
+      position: Vector2(60, 28), // Posição inicial segura no centro do mapa.
       linearDamping: 0.5,  // Adiciona "atrito" com o ar/mesa para parar a bola.
       angularDamping: 0.5, // Adiciona atrito na rotação.
       allowSleep: false,   // Mantém a bola acordada para responder à gravidade.

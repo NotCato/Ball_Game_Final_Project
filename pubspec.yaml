@@ -65,6 +65,7 @@ flutter:
   assets:
     - assets/
     - assets/tiles/
+    - assets/images/
 
 
   #   - images/a_dot_burr.jpeg
