@@ -3,6 +3,7 @@ import 'package:flame_forge2d/flame_forge2d.dart';
 class Ball extends BodyComponent {
   Ball() {
     debugMode = true;
+    priority = 10; // Garante que a bola é desenhada por cima do mapa
   }
 
   @override
@@ -10,7 +11,7 @@ class Ball extends BodyComponent {
     // 1. Define as propriedades físicas do corpo.
     final bodyDef = BodyDef(
       type: BodyType.dynamic, // Dynamic = afetado por forças e gravidade.
-      position: Vector2(60, 28), // Posição inicial segura no centro do mapa.
+      position: Vector2(5.0, 50.0), // Posição inicial no canto inferior esquerdo.
       linearDamping: 0.5,  // Adiciona "atrito" com o ar/mesa para parar a bola.
       angularDamping: 0.5, // Adiciona atrito na rotação.
       allowSleep: false,   // Mantém a bola acordada para responder à gravidade.

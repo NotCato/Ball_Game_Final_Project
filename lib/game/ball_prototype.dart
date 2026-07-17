@@ -26,29 +26,25 @@ class BallPrototype extends Forge2DGame {
     camera.viewfinder.anchor = Anchor.center;
     
     // Position define para qual ponto do mundo a câmara está a olhar.
-    // Centra num mapa em modo paisagem (aprox. 120m x 56m)
-    camera.viewfinder.position = Vector2(28, 60);
+    // Centra no ponto médio do mapa (60.2 horizontal, 28.0 vertical)
+    camera.viewfinder.position = Vector2(60.2, 28.0);
     
-    // Zoom: Como o Forge2D usa metros, precisamos de zoom alto (ex: 20.0)
-    // para que os objetos não fiquem minúsculos no ecrã.
-    camera.viewfinder.zoom = 12.0; // Zoom ajustado para a vista em modo paisagem
+    // Em vez de um zoom fixo, forçamos a câmara a mostrar a área total do mapa.
+    // O Flame vai calcular o zoom ideal para que estes 120.4m x 56m caibam no ecrã.
+    camera.viewfinder.visibleGameSize = Vector2(120.4, 56.0);
 
     // No Flame 1.x, adicionamos objetos físicos ao 'world'.
+    // Adicionamos o mapa primeiro para ficar no fundo
+    await world.add(TiledMapComponent());
+    // Adicionamos a bola depois para ficar por cima
     await world.add(Ball());
-    await world.add(TiledMapComponent()); // Adiciona o mapa Tiled em vez das fronteiras manuais
 
     // Escuta o acelerómetro para detetar a inclinação do telemóvel.
     _accelerometerSubscription = accelerometerEventStream().listen((AccelerometerEvent event) {
       // Mapeamos a inclinação do telemóvel para a gravidade do mundo.
-      // -event.x: inclinar para a direita faz a bola cair para a direita.
-      // event.y: inclinar para frente/trás faz a bola descer/subir na tela.
-      // O multiplicador (2.0) deixa o movimento mais ágil e sensível.
-
-      print(
-        'x: ${event.x.toStringAsFixed(2)} '
-        'y: ${event.y.toStringAsFixed(2)} '
-        'z: ${event.x.toStringAsFixed(2)} '
-      );
+      // Em modo Paisagem, os eixos invertem-se:
+      // event.y controla o movimento horizontal (esquerda/direita).
+      // event.x controla o movimento vertical (cima/baixo).
 
       double applyDeadzone(double value) {
         if (value.abs() < deadzone) {
@@ -57,8 +53,12 @@ class BallPrototype extends Forge2DGame {
           return value;
         }
       }
-      world.gravity.setValues(-applyDeadzone(event.x) * 5.0, applyDeadzone(event.y) * 5.0);
-      print(world.gravity);
+
+      // Ajuste para modo paisagem:
+      world.gravity.setValues(
+        applyDeadzone(event.y) * 5.0, 
+        applyDeadzone(event.x) * 5.0
+      );
     });
   }
 

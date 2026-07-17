@@ -1,8 +1,0 @@
-- [x] Lock Landscape orientation in `main.dart`
-- [x] Create `TiledMapComponent` to load map and parse `walls` layer
-- [x] Update `BallPrototype` to use `TiledMapComponent` and center camera
-- [x] Remove `Boundaries` component reference
-- [x] Fix Tiled Map (path and tilecount)
-- [x] Adjust Ball starting position
-- [x] Add null checks in `TiledMapComponent`
-- [x] Verify functionality
