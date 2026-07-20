@@ -1,10 +1,15 @@
+import 'package:flame/collisions.dart';
 import 'package:flame_forge2d/flame_forge2d.dart';
+import 'spike.dart';
 
-class Ball extends BodyComponent {
+class Ball extends BodyComponent with CollisionCallbacks{
   Ball() {
     debugMode = true;
     priority = 10; // Garante que a bola é desenhada por cima do mapa
   }
+
+  double posx;
+  double posy;
 
   @override
   Body createBody() {
@@ -31,5 +36,11 @@ class Ball extends BodyComponent {
     );
 
     return body;
+  }
+
+  void die(){
+    body.setTransform(Vector2(posx, posy), 0.0);
+    body.linearVelocity = Vector2.zero();
+    body.angularVelocity = 0;
   }
 }
