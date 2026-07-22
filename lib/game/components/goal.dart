@@ -1,6 +1,7 @@
+import 'package:flame/collisions.dart';
 import 'package:flame_forge2d/flame_forge2d.dart';
 
-class Goal extends BodyComponent {
+class Goal extends BodyComponent with CollisionCallbacks {
   @override
   final Vector2 position;
 
@@ -27,7 +28,12 @@ class Goal extends BodyComponent {
         0,
       );
 
-    body.createFixtureFromShape(shape);
+    body.createFixture(
+      FixtureDef(
+        shape,
+        isSensor: true,
+      ),
+    );
 
     return body;
   }
