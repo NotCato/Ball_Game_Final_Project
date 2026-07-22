@@ -1,10 +1,12 @@
-import 'package:flame/collisions.dart';
 import 'package:flame_forge2d/flame_forge2d.dart';
+import 'spike.dart';
 
 /// Uma bola física controlada pela inclinação do dispositivo e reiniciada ao bater em espinhos.
-class Ball extends BodyComponent with CollisionCallbacks {
+class Ball extends BodyComponent with ContactCallbacks {
   /// A posição de spawn usada para reiniciar a bola após colisão.
   static final Vector2 initialPosition = Vector2(5.0, 50.0);
+
+  bool _shouldReset = false;
 
   /// Cria uma nova bola e ativa o modo de debug.
   Ball() {
@@ -15,33 +17,50 @@ class Ball extends BodyComponent with CollisionCallbacks {
   @override
   /// Cria o corpo Forge2D da bola com uma forma circular.
   Body createBody() {
-    // 1. Define as propriedades físicas do corpo.
     final bodyDef = BodyDef(
-      type: BodyType.dynamic, // Dynamic = afetado por forças e gravidade.
+      type: BodyType.dynamic,
       position: initialPosition,
-      linearDamping: 0.5,  // Adiciona "atrito" com o ar/mesa para parar a bola.
-      angularDamping: 0.5, // Adiciona atrito na rotação.
-      allowSleep: false,   // Mantém a bola acordada para responder à gravidade.
+      linearDamping: 0.5,
+      angularDamping: 0.5,
+      allowSleep: false,
     );
 
     final body = world.createBody(bodyDef);
-
-    // 2. Define o formato (neste caso, um círculo de 1 metro de raio).
     final shape = CircleShape()..radius = 1;
 
-    // 3. Cria a Fixture que une o formato ao corpo e define peso e rebote.
-    body.createFixtureFromShape(
+    final fixtureDef = FixtureDef(
       shape,
-      density: 1.0,      // Densidade/Massa.
-      friction: 0.2,     // Atrito ao deslizar.
-      restitution: 0.3,  // Bounciness (elasticidade/pulo).
+      density: 1.0,
+      friction: 0.2,
+      restitution: 0.3,
+      userData: this, // Permite identificar que este corpo é a Ball
     );
 
+    body.createFixture(fixtureDef);
     return body;
   }
 
-  /// Reinicia a bola para a sua posição de spawn inicial e anula a velocidade.
-  void reset() {
+  @override
+  void update(double dt) {
+    super.update(dt);
+    if (_shouldReset) {
+      _doReset();
+      _shouldReset = false;
+    }
+  }
+
+  @override
+  void beginContact(Object other, Contact contact) {
+    super.beginContact(other, contact);
+    if (other is Spike) {
+      reset();
+    }
+  }
+
+  /// Marca a bola para ser reiniciada fora do passo de física.
+  void reset() => _shouldReset = true;
+
+  void _doReset() {
     body.setTransform(initialPosition, 0.0);
     body.linearVelocity = Vector2.zero();
     body.angularVelocity = 0;
