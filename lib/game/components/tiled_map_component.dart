@@ -34,7 +34,7 @@ class TiledMapComponent extends Component with HasGameReference<Forge2DGame> {
         final position = Vector2(obj.x * scale, obj.y * scale) + (Vector2(obj.width * scale, obj.height * scale) / 2);
         final size = Vector2(obj.width * scale, obj.height * scale);
 
-        // Adiciona uma parede física para cada objeto
+        // Adiciona um spike para cada objeto
         game.world.add(Spike(position, size));
       }
     }
