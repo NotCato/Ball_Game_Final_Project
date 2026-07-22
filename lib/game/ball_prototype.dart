@@ -37,7 +37,8 @@ class BallPrototype extends Forge2DGame {
     // Adicionamos o mapa primeiro para ficar no fundo
     await world.add(TiledMapComponent());
     // Adicionamos a bola depois para ficar por cima
-    await world.add(Ball());
+    await world.add(Ball(Vector2(5.0, 50.0)),
+    );
 
     // Escuta o acelerómetro para detetar a inclinação do telemóvel.
     _accelerometerSubscription = accelerometerEventStream().listen((AccelerometerEvent event) {

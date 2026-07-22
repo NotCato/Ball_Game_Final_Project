@@ -1,21 +1,17 @@
-import 'package:flame/collisions.dart';
-import 'package:flame/components.dart';
 import 'package:flame_forge2d/flame_forge2d.dart';
-import 'package:flame/collisions.dart';
-import 'ball.dart';
 
-class Spike extends PositionComponent with CollisionCallbacks {
+class Spike extends BodyComponent {
   @override
-  void onCollision(Set<Vector2> points,PositionComponent other) {
-    if (other is Ball){
+  final Vector2 position;
 
-    }
+  final Vector2 size;
+
+  Spike(this.position, this.size) {
+    debugMode = true;
   }
 
   @override
   Body createBody() {
-    // Corpos estáticos (Static) não se movem e não sofrem gravidade.
-    // São ideais para chão, paredes e obstáculos fixos.
     final bodyDef = BodyDef(
       type: BodyType.static,
       position: position,
@@ -23,8 +19,6 @@ class Spike extends PositionComponent with CollisionCallbacks {
 
     final body = world.createBody(bodyDef);
 
-    // setAsBox recebe METADE da largura e METADE da altura.
-    // O ponto de origem (centro) fica no meio do retângulo.
     final shape = PolygonShape()
       ..setAsBox(
         size.x / 2,

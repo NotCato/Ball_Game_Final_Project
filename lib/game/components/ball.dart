@@ -2,10 +2,11 @@ import 'package:flame/collisions.dart';
 import 'package:flame_forge2d/flame_forge2d.dart';
 import 'spike.dart';
 
-class Ball extends BodyComponent with CollisionCallbacks{
+class Ball extends BodyComponent{ //with CollisionCallbacks
   
   final Vector2 spawnPoint;
   
+  @override
   Ball(this.spawnPoint) {
     debugMode = true;
     priority = 10; // Garante que a bola é desenhada por cima do mapa
