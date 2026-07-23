@@ -40,7 +40,8 @@ class BallPrototype extends Forge2DGame {
     await world.add(map);
 
     // Bola
-    ball = Ball(Vector2(5.0, 50.0));
+    final spawnPoint = map.spawnPoint ?? Vector2(5.0, 50.0);
+    ball = Ball(spawnPoint);
     await world.add(ball);
 
     // Cronómetro

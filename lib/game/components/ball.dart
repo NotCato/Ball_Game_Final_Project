@@ -4,12 +4,13 @@ import 'spike.dart';
 /// Uma bola física controlada pela inclinação do dispositivo e reiniciada ao bater em espinhos.
 class Ball extends BodyComponent with ContactCallbacks {
   /// A posição de spawn usada para reiniciar a bola após colisão.
-  static final Vector2 initialPosition = Vector2(5.0, 50.0);
+  final Vector2 initialPosition;
 
   bool _shouldReset = false;
 
   /// Cria uma nova bola e ativa o modo de debug.
-  Ball() {
+  Ball([Vector2? initialPosition])
+      : initialPosition = initialPosition ?? Vector2(5.0, 50.0) {
     debugMode = true;
     priority = 10; // Garante que a bola é desenhada por cima do mapa
   }
