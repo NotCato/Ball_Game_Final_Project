@@ -1,6 +1,7 @@
 import 'package:flame_forge2d/flame_forge2d.dart';
+import 'ball.dart';
 
-class Goal extends BodyComponent {
+class Goal extends BodyComponent with ContactCallbacks {
   @override
   final Vector2 position;
 
@@ -8,6 +9,13 @@ class Goal extends BodyComponent {
 
   Goal(this.position, this.size) {
     debugMode = true;
+  }
+
+  @override
+  void beginContact(Object other, Contact contact) {
+    if (other is Ball) {
+      other.reset();
+    } 
   }
 
   @override
