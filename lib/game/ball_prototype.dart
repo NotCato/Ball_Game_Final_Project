@@ -1,19 +1,29 @@
 import 'dart:async';
+
 import 'package:flame/components.dart';
+import 'package:flame/text.dart';
 import 'package:flame_forge2d/flame_forge2d.dart';
+import 'package:flutter/material.dart';
 import 'package:sensors_plus/sensors_plus.dart';
+
 import 'components/ball.dart';
-import 'components/tiled_map_component.dart'; // Importa o carregador de mapas novo
+import 'components/tiled_map_component.dart';
 
 const double deadzone = 0.7;
 
 class BallPrototype extends Forge2DGame {
-  // O StreamSubscription guarda a ligação com os sensores do telemóvel.
   StreamSubscription<AccelerometerEvent>? _accelerometerSubscription;
+
+  late TextComponent timerText;
+
+  late Ball ball;
+  late TiledMapComponent map;
+
+  double elapsedTime = 0;
+  bool levelCompleted = false;
 
   BallPrototype()
       : super(
-          // Gravidade inicial (Vector2(x, y)). Y positivo puxa para baixo.
           gravity: Vector2.zero(),
         );
 
@@ -21,51 +31,110 @@ class BallPrototype extends Forge2DGame {
   Future<void> onLoad() async {
     await super.onLoad();
 
-    // O Viewfinder controla o "olho" da câmara.
-    // Anchor.center coloca o ponto (0,0) no centro do ecrã do telemóvel.
     camera.viewfinder.anchor = Anchor.center;
-    
-    // Position define para qual ponto do mundo a câmara está a olhar.
-    // Centra no ponto médio do mapa (60.2 horizontal, 28.0 vertical)
     camera.viewfinder.position = Vector2(60.2, 28.0);
-    
-    // Em vez de um zoom fixo, forçamos a câmara a mostrar a área total do mapa.
-    // O Flame vai calcular o zoom ideal para que estes 120.4m x 56m caibam no ecrã.
     camera.viewfinder.visibleGameSize = Vector2(120.4, 56.0);
 
-    // No Flame 1.x, adicionamos objetos físicos ao 'world'.
-    // Adicionamos o mapa primeiro para ficar no fundo
-    await world.add(TiledMapComponent());
-    // Adicionamos a bola depois para ficar por cima
-    await world.add(Ball());
+    // Mapa
+    map = TiledMapComponent();
+    await world.add(map);
 
-    // Escuta o acelerómetro para detetar a inclinação do telemóvel.
-    _accelerometerSubscription = accelerometerEventStream().listen((AccelerometerEvent event) {
-      // Mapeamos a inclinação do telemóvel para a gravidade do mundo.
-      // Em modo Paisagem, os eixos invertem-se:
-      // event.y controla o movimento horizontal (esquerda/direita).
-      // event.x controla o movimento vertical (cima/baixo).
+    // Bola
+    ball = Ball(Vector2(5.0, 50.0));
+    await world.add(ball);
+
+    // Cronómetro
+    timerText = TextComponent(
+      text: "⏱ 00:00",
+      position: Vector2(25, 20),
+      priority: 100,
+      textRenderer: TextPaint(
+        style: const TextStyle(
+          color: Colors.white,
+          fontSize: 28,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+    );
+
+    add(timerText);
+    
+    // Sensor
+    _accelerometerSubscription =
+        accelerometerEventStream().listen((AccelerometerEvent event) {
+      if (levelCompleted) return;
 
       double applyDeadzone(double value) {
         if (value.abs() < deadzone) {
           return 0.0;
-        } else {
-          return value;
         }
+        return value;
       }
 
-      // Ajuste para modo paisagem:
       world.gravity.setValues(
-        applyDeadzone(event.y) * 5.0, 
-        applyDeadzone(event.x) * 5.0
+        applyDeadzone(event.y) * 5.0,
+        applyDeadzone(event.x) * 5.0,
       );
     });
   }
 
-    @override
-    void onRemove() {
-      // IMPORTANTE: Cancele sempre o sensor para não gastar bateria/memória!
-      _accelerometerSubscription?.cancel();
-      super.onRemove();
+  @override
+  void update(double dt) {
+    super.update(dt);
+
+    if (levelCompleted) return;
+
+    elapsedTime += dt;
+
+    final minutes = elapsedTime ~/ 60;
+    final seconds = (elapsedTime % 60).floor();
+
+    timerText.text =
+        "⏱ ${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}";
+
+    // Vitória
+    if (map.goalPoint != null &&
+        ball.body.position.distanceTo(map.goalPoint!) < 1.5) {
+      levelCompleted = true;
+
+      // Para a bola
+      world.gravity = Vector2.zero();
+      ball.body.linearVelocity = Vector2.zero();
+      ball.body.angularVelocity = 0;
+
+      // Fundo escuro
+      add(
+        RectangleComponent(
+          position: Vector2.zero(),
+          size: size,
+          paint: Paint()..color = Colors.black.withOpacity(0.75),
+          priority: 500,
+        ),
+      );
+
+      // Mensagem
+      add(
+        TextComponent(
+          text:
+              "🏆 NÍVEL COMPLETO!\n\n⏱ ${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}",
+          anchor: Anchor.center,
+          position: size / 2,
+          priority: 501,
+          textRenderer: TextPaint(
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 34,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+      );
     }
   }
+
+  @override
+  void onRemove() {
+    _accelerometerSubscription?.cancel();
+    super.onRemove();
+  }
+}

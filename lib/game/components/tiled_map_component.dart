@@ -1,40 +1,82 @@
 import 'package:flame/components.dart';
 import 'package:flame_forge2d/flame_forge2d.dart';
 import 'package:flame_tiled/flame_tiled.dart';
-import 'walls.dart';
 import 'spike.dart';
+import 'walls.dart';
+import 'goal.dart';
 
-class TiledMapComponent extends Component with HasGameReference<Forge2DGame> {
-  static const double scale = 0.05; // Fator de escala de píxeis para metros
+class TiledMapComponent extends Component
+    with HasGameReference<Forge2DGame> {
+  static const double scale = 0.05;
+
+  Vector2? spawnPoint;
+  Vector2? goalPoint;
 
   @override
   Future<void> onLoad() async {
-    // Carrega o mapa Tiled a partir dos recursos (assets)
-    final tiledMap = await TiledComponent.load('Test_level.tmx', Vector2.all(56) * scale);
-    add(tiledMap); // Adiciona o mapa visual ao jogo
+    final tiledMap = await TiledComponent.load(
+      'Test_level.tmx',
+      Vector2.all(56) * scale,
+    );
 
-    // Obtém a camada de objetos 'walls'
+    add(tiledMap);
+
     final wallLayer = tiledMap.tileMap.getLayer<ObjectGroup>('walls');
     final spikeLayer = tiledMap.tileMap.getLayer<ObjectGroup>('spikes');
+    final goalLayer = tiledMap.tileMap.getLayer<ObjectGroup>('goal');
+    final spawnLayer = tiledMap.tileMap.getLayer<ObjectGroup>('spawn');
 
-    if (wallLayer != null && wallLayer.objects.isNotEmpty) {
+    if (spawnLayer != null && spawnLayer.objects.isNotEmpty) {
+      final obj = spawnLayer.objects.first;
+
+      spawnPoint = Vector2(
+        obj.x * scale,
+        obj.y * scale,
+      );
+    }
+
+    if (goalLayer != null && goalLayer.objects.isNotEmpty) {
+      final obj = goalLayer.objects.first;
+
+      goalPoint = Vector2(
+        obj.x * scale + (obj.width * scale) / 2,
+        obj.y * scale + (obj.height * scale) / 2,
+      );
+
+      game.world.add(
+        Goal(
+          goalPoint!,
+          Vector2(obj.width * scale, obj.height * scale),
+        ),
+      );
+    }
+
+    if (wallLayer != null) {
       for (final obj in wallLayer.objects) {
-        // Converte coordenadas Tiled (canto superior esquerdo) para coordenadas Forge2D (centro)
-        final position = Vector2(obj.x * scale, obj.y * scale) + (Vector2(obj.width * scale, obj.height * scale) / 2);
-        final size = Vector2(obj.width * scale, obj.height * scale);
+        final position =
+            Vector2(obj.x * scale, obj.y * scale) +
+                (Vector2(obj.width * scale, obj.height * scale) / 2);
 
-        // Adiciona uma parede física para cada objeto
+        final size = Vector2(
+          obj.width * scale,
+          obj.height * scale,
+        );
+
         game.world.add(Wall(position, size));
       }
     }
 
-    if (spikeLayer != null && spikeLayer.objects.isNotEmpty) {
+    if (spikeLayer != null) {
       for (final obj in spikeLayer.objects) {
-        // Converte coordenadas Tiled (canto superior esquerdo) para coordenadas Forge2D (centro)
-        final position = Vector2(obj.x * scale, obj.y * scale) + (Vector2(obj.width * scale, obj.height * scale) / 2);
-        final size = Vector2(obj.width * scale, obj.height * scale);
+        final position =
+            Vector2(obj.x * scale, obj.y * scale) +
+                (Vector2(obj.width * scale, obj.height * scale) / 2);
 
-        // Adiciona um spike para cada objeto
+        final size = Vector2(
+          obj.width * scale,
+          obj.height * scale,
+        );
+
         game.world.add(Spike(position, size));
       }
     }
