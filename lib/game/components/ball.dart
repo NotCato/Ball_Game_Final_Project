@@ -1,5 +1,6 @@
 import 'package:flame_forge2d/flame_forge2d.dart';
 import 'spike.dart';
+import 'goal.dart';
 
 /// Uma bola física controlada pela inclinação do dispositivo e reiniciada ao bater em espinhos.
 class Ball extends BodyComponent with ContactCallbacks {
@@ -53,7 +54,7 @@ class Ball extends BodyComponent with ContactCallbacks {
   @override
   void beginContact(Object other, Contact contact) {
     super.beginContact(other, contact);
-    if (other is Spike) {
+    if (other is Spike || other is Goal) {
       reset();
     }
   }
