@@ -1,8 +1,9 @@
 import 'package:flame_forge2d/flame_forge2d.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:flame_prototype/game/components/ball.dart';
-import 'package:flame_prototype/game/components/spike.dart';
-import 'package:flame_prototype/game/components/goal.dart';
+
+import 'package:flame_prototype/domain/entities/ball.dart';
+import 'package:flame_prototype/domain/entities/goal.dart';
+import 'package:flame_prototype/domain/entities/spike.dart';
 
 class TestBall extends Ball {
   bool resetCalled = false;

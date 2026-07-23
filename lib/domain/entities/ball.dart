@@ -1,7 +1,8 @@
 import 'package:flame_forge2d/flame_forge2d.dart';
-import '../ball_prototype.dart';
-import 'spike.dart';
+
+import '../../presentation/game/ball_prototype.dart';
 import 'goal.dart';
+import 'spike.dart';
 
 /// Uma bola física controlada pela inclinação do dispositivo e reiniciada ao bater em espinhos.
 class Ball extends BodyComponent<BallPrototype> with ContactCallbacks {

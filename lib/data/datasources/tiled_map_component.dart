@@ -1,9 +1,10 @@
 import 'package:flame/components.dart';
 import 'package:flame_forge2d/flame_forge2d.dart';
 import 'package:flame_tiled/flame_tiled.dart';
-import 'spike.dart';
-import 'walls.dart';
-import 'goal.dart';
+
+import '../../domain/entities/goal.dart';
+import '../../domain/entities/spike.dart';
+import '../../domain/entities/wall.dart';
 
 class TiledMapComponent extends Component with HasGameReference<Forge2DGame> {
   static const double scale = 0.05;
