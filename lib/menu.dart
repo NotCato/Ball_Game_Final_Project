@@ -14,7 +14,6 @@ class MainMenu extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-
             const Text(
               "TILT MAZE",
               style: TextStyle(
@@ -44,7 +43,6 @@ class MainMenu extends StatelessWidget {
                 ),
               ),
               onPressed: () {
-
                 Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -53,7 +51,6 @@ class MainMenu extends StatelessWidget {
                     ),
                   ),
                 );
-
               },
               child: const Text(
                 "JOGAR",

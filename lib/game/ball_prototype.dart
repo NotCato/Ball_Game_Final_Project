@@ -58,10 +58,12 @@ class BallPrototype extends Forge2DGame {
     );
 
     add(timerText);
-
+    
     // Sensor
     _accelerometerSubscription =
         accelerometerEventStream().listen((AccelerometerEvent event) {
+      if (levelCompleted) return;
+
       double applyDeadzone(double value) {
         if (value.abs() < deadzone) {
           return 0.0;
@@ -80,23 +82,53 @@ class BallPrototype extends Forge2DGame {
   void update(double dt) {
     super.update(dt);
 
-    if (!levelCompleted) {
-      elapsedTime += dt;
+    if (levelCompleted) return;
 
-      final minutes = elapsedTime ~/ 60;
-      final seconds = (elapsedTime % 60).floor();
+    elapsedTime += dt;
 
-      timerText.text =
-          "⏱ ${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}";
+    final minutes = elapsedTime ~/ 60;
+    final seconds = (elapsedTime % 60).floor();
 
-      // Vitória
-      if (map.goalPoint != null) {
-        if (ball.body.position.distanceTo(map.goalPoint!) < 1.5) {
-          levelCompleted = true;
+    timerText.text =
+        "⏱ ${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}";
 
-          print("🏆 NÍVEL COMPLETO!");
-        }
-      }
+    // Vitória
+    if (map.goalPoint != null &&
+        ball.body.position.distanceTo(map.goalPoint!) < 1.5) {
+      levelCompleted = true;
+
+      // Para a bola
+      world.gravity = Vector2.zero();
+      ball.body.linearVelocity = Vector2.zero();
+      ball.body.angularVelocity = 0;
+
+      // Fundo escuro
+      add(
+        RectangleComponent(
+          position: Vector2.zero(),
+          size: size,
+          paint: Paint()..color = Colors.black.withOpacity(0.75),
+          priority: 500,
+        ),
+      );
+
+      // Mensagem
+      add(
+        TextComponent(
+          text:
+              "🏆 NÍVEL COMPLETO!\n\n⏱ ${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}",
+          anchor: Anchor.center,
+          position: size / 2,
+          priority: 501,
+          textRenderer: TextPaint(
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 34,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+      );
     }
   }
 
