@@ -1,6 +1,8 @@
 import 'dart:async';
 
 import 'package:flame/components.dart';
+import 'package:flame/events.dart';
+import 'package:flame/game.dart';
 import 'package:flame/text.dart';
 import 'package:flame_forge2d/flame_forge2d.dart';
 import 'package:flutter/material.dart';
@@ -11,18 +13,28 @@ import 'components/tiled_map_component.dart';
 
 const double deadzone = 0.7;
 
-class BallPrototype extends Forge2DGame {
+class BallPrototype extends Forge2DGame with TapCallbacks {
+  // Lista de níveis na ordem desejada
+  static const List<String> levels = [
+    'Test_level.tmx',
+    'level_1.tmx',
+    'level_2.tmx',
+    'level_3.tmx',
+  ];
+
+  final int levelIndex; // Índice do nível atual
+
   StreamSubscription<AccelerometerEvent>? _accelerometerSubscription;
 
   late TextComponent timerText;
-
   late Ball ball;
   late TiledMapComponent map;
 
   double elapsedTime = 0;
   bool levelCompleted = false;
 
-  BallPrototype()
+  // Construtor que recebe o índice (padrão é 0 - Test_level)
+  BallPrototype({this.levelIndex = 0})
       : super(
           gravity: Vector2.zero(),
         );
@@ -35,8 +47,8 @@ class BallPrototype extends Forge2DGame {
     camera.viewfinder.position = Vector2(60.2, 28.0);
     camera.viewfinder.visibleGameSize = Vector2(120.4, 56.0);
 
-    // Mapa
-    map = TiledMapComponent();
+    // Carrega o mapa baseado no índice atual
+    map = TiledMapComponent(levels[levelIndex]);
     await world.add(map);
 
     // Bola
@@ -92,44 +104,79 @@ class BallPrototype extends Forge2DGame {
 
     timerText.text =
         "⏱ ${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}";
+  }
 
-    // Vitória
-    if (map.goalPoint != null &&
-        ball.body.position.distanceTo(map.goalPoint!) < 1.5) {
-      levelCompleted = true;
+  // Chamado quando a bola toca na meta
+  void onGoalReached() {
+    if (levelCompleted) return;
 
-      // Para a bola
-      world.gravity = Vector2.zero();
-      ball.body.linearVelocity = Vector2.zero();
-      ball.body.angularVelocity = 0;
+    levelCompleted = true;
 
-      // Fundo escuro
-      add(
-        RectangleComponent(
-          position: Vector2.zero(),
-          size: size,
-          paint: Paint()..color = Colors.black.withOpacity(0.75),
-          priority: 500,
-        ),
-      );
+    final minutes = elapsedTime ~/ 60;
+    final seconds = (elapsedTime % 60).floor();
 
-      // Mensagem
-      add(
-        TextComponent(
-          text:
-              "🏆 NÍVEL COMPLETO!\n\n⏱ ${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}",
-          anchor: Anchor.center,
-          position: size / 2,
-          priority: 501,
-          textRenderer: TextPaint(
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 34,
-              fontWeight: FontWeight.bold,
-            ),
+    _showVictoryScreen(minutes, seconds);
+  }
+
+  void _showVictoryScreen(int minutes, int seconds) {
+    // Para a bola
+    world.gravity = Vector2.zero();
+    ball.body.linearVelocity = Vector2.zero();
+    ball.body.angularVelocity = 0;
+
+    // Fundo escuro
+    add(
+      RectangleComponent(
+        position: Vector2.zero(),
+        size: size,
+        paint: Paint()..color = Colors.black.withValues(alpha: 0.75),
+        priority: 500,
+      ),
+    );
+
+    String message = "🏆 NÍVEL COMPLETO!\n\n⏱ ${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}";
+    String subMessage = (levelIndex < levels.length - 1)
+        ? "\n\nClica no ecrã para o PRÓXIMO NÍVEL" 
+        : "\n\nPARABÉNS! Completaste o jogo!";
+
+    // Mensagem de Vitória
+    add(
+      TextComponent(
+        text: message + subMessage,
+        anchor: Anchor.center,
+        position: size / 2,
+        priority: 501,
+        textRenderer: TextPaint(
+          style: const TextStyle(
+            color: Colors.white,
+            fontSize: 28,
+            fontWeight: FontWeight.bold,
           ),
         ),
-      );
+      ),
+    );
+  }
+
+  @override
+  void onTapDown(TapDownEvent event) {
+    super.onTapDown(event);
+
+    // Se o nível acabou e clicarmos no ecrã
+    if (levelCompleted) {
+      if (levelIndex < levels.length - 1) {
+        // Carrega o próximo nível reiniciando o BallPrototype
+        Navigator.pushReplacement(
+          buildContext!,
+          MaterialPageRoute(
+            builder: (_) => GameWidget(
+              game: BallPrototype(levelIndex: levelIndex + 1),
+            ),
+          ),
+        );
+      } else {
+        // Volta ao menu se for o último nível
+        Navigator.pop(buildContext!);
+      }
     }
   }
 

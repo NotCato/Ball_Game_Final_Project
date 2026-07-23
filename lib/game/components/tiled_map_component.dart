@@ -5,17 +5,19 @@ import 'spike.dart';
 import 'walls.dart';
 import 'goal.dart';
 
-class TiledMapComponent extends Component
-    with HasGameReference<Forge2DGame> {
+class TiledMapComponent extends Component with HasGameReference<Forge2DGame> {
   static const double scale = 0.05;
+  final String mapName; // Nome do ficheiro .tmx
 
   Vector2? spawnPoint;
   Vector2? goalPoint;
 
+  TiledMapComponent(this.mapName); // Construtor que recebe o nome do mapa
+
   @override
   Future<void> onLoad() async {
     final tiledMap = await TiledComponent.load(
-      'Test_level.tmx',
+      mapName, // Usa o nome passado no construtor
       Vector2.all(56) * scale,
     );
 
@@ -54,8 +56,7 @@ class TiledMapComponent extends Component
     if (wallLayer != null) {
       for (final obj in wallLayer.objects) {
         final position =
-            Vector2(obj.x * scale, obj.y * scale) +
-                (Vector2(obj.width * scale, obj.height * scale) / 2);
+            Vector2(obj.x * scale, obj.y * scale) + (Vector2(obj.width * scale, obj.height * scale) / 2);
 
         final size = Vector2(
           obj.width * scale,
@@ -69,8 +70,7 @@ class TiledMapComponent extends Component
     if (spikeLayer != null) {
       for (final obj in spikeLayer.objects) {
         final position =
-            Vector2(obj.x * scale, obj.y * scale) +
-                (Vector2(obj.width * scale, obj.height * scale) / 2);
+            Vector2(obj.x * scale, obj.y * scale) + (Vector2(obj.width * scale, obj.height * scale) / 2);
 
         final size = Vector2(
           obj.width * scale,

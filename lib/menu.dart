@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flame/game.dart';
 
-import 'game/Ball_Prototype.dart';
+import 'game/ball_prototype.dart';
 
 class MainMenu extends StatelessWidget {
   const MainMenu({super.key});

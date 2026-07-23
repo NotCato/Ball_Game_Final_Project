@@ -1,8 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.12.2" orientation="orthogonal" renderorder="right-down" width="43" height="20" tilewidth="56" tileheight="56" infinite="0" nextlayerid="4" nextobjectid="16">
+<map version="1.10" tiledversion="1.12.2" orientation="orthogonal" renderorder="right-down" width="43" height="20" tilewidth="56" tileheight="56" infinite="0" nextlayerid="5" nextobjectid="17">
  <tileset firstgid="1" name="tiles-fridge" tilewidth="56" tileheight="56" tilecount="100" columns="10">
   <image source="../images/tiles-fridge.png" width="560" height="560"/>
  </tileset>
+ <objectgroup id="5" name="spawn">
+  <object id="16" x="194" y="984"/>
+ </objectgroup>
+ <objectgroup id="4" name="goal">
+  <object id="15" x="2365.5" y="853.5" width="32" height="208"/>
+ </objectgroup>
  <objectgroup id="3" name="spikes">
   <object id="15" x="976" y="220" width="48" height="150"/>
   <object id="16" x="706" y="682" width="46" height="150"/>
@@ -46,7 +52,4 @@
 14,4,4,4,4,4,14,14,14,14,14,14,14,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,14,14,14,14,14,14,14,4,4,4,4,4,4
 </data>
  </layer>
- <objectgroup id="3" name="goal">
-  <object id="15" x="2322" y="854" width="32" height="208"/>
- </objectgroup>
 </map>

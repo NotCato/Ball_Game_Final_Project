@@ -1,6 +1,6 @@
 import 'package:flame/components.dart';
 import 'package:flame_forge2d/flame_forge2d.dart';
-import '/game/components/walls.dart';
+import 'package:flame_prototype/game/components/walls.dart';
 
 class Boundaries extends Component with HasGameReference<Forge2DGame> {
   @override
