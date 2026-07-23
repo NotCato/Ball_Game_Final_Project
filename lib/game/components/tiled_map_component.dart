@@ -9,8 +9,8 @@ class TiledMapComponent extends Component
     with HasGameReference<Forge2DGame> {
   static const double scale = 0.05;
 
-  // Guarda o ponto de spawn lido do mapa
   Vector2? spawnPoint;
+  Vector2? goalPoint;
 
   @override
   Future<void> onLoad() async {
@@ -26,7 +26,6 @@ class TiledMapComponent extends Component
     final goalLayer = tiledMap.tileMap.getLayer<ObjectGroup>('goal');
     final spawnLayer = tiledMap.tileMap.getLayer<ObjectGroup>('spawn');
 
-    // Spawn
     if (spawnLayer != null && spawnLayer.objects.isNotEmpty) {
       final obj = spawnLayer.objects.first;
 
@@ -36,58 +35,50 @@ class TiledMapComponent extends Component
       );
     }
 
-    // Paredes
-    if (wallLayer != null && wallLayer.objects.isNotEmpty) {
+    if (goalLayer != null && goalLayer.objects.isNotEmpty) {
+      final obj = goalLayer.objects.first;
+
+      goalPoint = Vector2(
+        obj.x * scale + (obj.width * scale) / 2,
+        obj.y * scale + (obj.height * scale) / 2,
+      );
+
+      game.world.add(
+        Goal(
+          goalPoint!,
+          Vector2(obj.width * scale, obj.height * scale),
+        ),
+      );
+    }
+
+    if (wallLayer != null) {
       for (final obj in wallLayer.objects) {
         final position =
             Vector2(obj.x * scale, obj.y * scale) +
-            (Vector2(obj.width * scale, obj.height * scale) / 2);
+                (Vector2(obj.width * scale, obj.height * scale) / 2);
 
         final size = Vector2(
           obj.width * scale,
           obj.height * scale,
         );
 
-        game.world.add(
-          Wall(position, size),
-        );
+        game.world.add(Wall(position, size));
       }
     }
 
-    // Espinhos
-    if (spikeLayer != null && spikeLayer.objects.isNotEmpty) {
+    if (spikeLayer != null) {
       for (final obj in spikeLayer.objects) {
         final position =
             Vector2(obj.x * scale, obj.y * scale) +
-            (Vector2(obj.width * scale, obj.height * scale) / 2);
+                (Vector2(obj.width * scale, obj.height * scale) / 2);
 
         final size = Vector2(
           obj.width * scale,
           obj.height * scale,
         );
 
-        game.world.add(
-          Spike(position, size),
-        );
+        game.world.add(Spike(position, size));
       }
     }
-    
-    // Goal
-    if (goalLayer != null && goalLayer.objects.isNotEmpty) {
-      for (final obj in goalLayer.objects) {
-        final position =
-            Vector2(obj.x * scale, obj.y * scale) +
-            (Vector2(obj.width * scale, obj.height * scale) / 2);
-
-        final size = Vector2(
-          obj.width * scale,
-          obj.height * scale,
-        );
-
-        game.world.add(
-          Goal(position, size),
-        );
-      }
-}
   }
 }
