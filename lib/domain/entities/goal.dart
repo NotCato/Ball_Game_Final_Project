@@ -20,8 +20,6 @@ class Goal extends BodyComponent with ContactCallbacks {
     print("GOAL CONTACT -> ${other.runtimeType}");
 
     if (other is Ball) {
-      print("BALL TOUCHED GOAL");
-
       (game as BallPrototype).onGoalReached();
     }
   }
