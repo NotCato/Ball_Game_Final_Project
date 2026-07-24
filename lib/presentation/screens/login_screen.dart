@@ -16,14 +16,16 @@ class _LoginScreenState extends State<LoginScreen> {
   // Serviço de autenticação.
   final AuthService _authService = AuthService();
 
-  // Controladores dos campos.
+  // Controladores dos campos de texto.
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
+  // Indica se o login está em processamento.
   bool _isLoading = false;
 
   // Efetua o login do utilizador.
   Future<void> _login() async {
+    // Verifica se todos os campos foram preenchidos.
     if (_emailController.text.trim().isEmpty ||
         _passwordController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -39,6 +41,7 @@ class _LoginScreenState extends State<LoginScreen> {
     });
 
     try {
+      // Tenta autenticar o utilizador.
       await _authService.login(
         email: _emailController.text.trim(),
         password: _passwordController.text,
@@ -46,6 +49,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
       if (!mounted) return;
 
+      // Login efetuado com sucesso.
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
@@ -53,6 +57,7 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
       );
     } catch (e) {
+      // Apresenta uma mensagem caso ocorra um erro.
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text("Erro ao iniciar sessão.\n$e"),
@@ -69,9 +74,9 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   void dispose() {
+    // Liberta os controladores da memória.
     _emailController.dispose();
     _passwordController.dispose();
-
     super.dispose();
   }
 
@@ -94,10 +99,22 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
               ),
 
-              const SizedBox(height: 50),
+              const SizedBox(height: 20),
 
+              const Text(
+                "Inicia sessão para continuar",
+                style: TextStyle(
+                  color: Colors.white70,
+                  fontSize: 18,
+                ),
+              ),
+
+              const SizedBox(height: 40),
+
+              // Campo de email.
               TextField(
                 controller: _emailController,
+                keyboardType: TextInputType.emailAddress,
                 decoration: const InputDecoration(
                   labelText: "Email",
                   border: OutlineInputBorder(),
@@ -107,6 +124,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
               const SizedBox(height: 20),
 
+              // Campo de password.
               TextField(
                 controller: _passwordController,
                 obscureText: true,
@@ -119,18 +137,32 @@ class _LoginScreenState extends State<LoginScreen> {
 
               const SizedBox(height: 30),
 
+              // Botão para iniciar sessão.
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: _isLoading ? null : _login,
+                  style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                  ),
                   child: _isLoading
-                      ? const CircularProgressIndicator()
-                      : const Text("Entrar"),
+                      ? const SizedBox(
+                          height: 22,
+                          width: 22,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2.5,
+                          ),
+                        )
+                      : const Text(
+                          "Entrar",
+                          style: TextStyle(fontSize: 18),
+                        ),
                 ),
               ),
 
-              const SizedBox(height: 15),
+              const SizedBox(height: 20),
 
+              // Navega para o ecrã de registo.
               TextButton(
                 onPressed: () {
                   Navigator.push(
