@@ -16,7 +16,6 @@ const double deadzone = 0.7;
 class BallPrototype extends Forge2DGame with TapCallbacks {
   // Lista de níveis na ordem desejada
   static const List<String> levels = [
-    'Test_level.tmx',
     'level_1.tmx',
     'level_2.tmx',
     'level_3.tmx',
