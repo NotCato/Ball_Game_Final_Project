@@ -13,11 +13,10 @@ class Ball extends BodyComponent<BallPrototype> with ContactCallbacks {
   Ball([Vector2? initialPosition])
       : initialPosition = initialPosition ?? Vector2(5.0, 50.0) {
     debugMode = true;
-    priority = 10; // Garante que a bola é desenhada por cima do mapa
+    priority = 10;
   }
 
   @override
-  /// Cria o corpo Forge2D da bola com uma forma circular.
   Body createBody() {
     final bodyDef = BodyDef(
       type: BodyType.dynamic,
@@ -28,6 +27,7 @@ class Ball extends BodyComponent<BallPrototype> with ContactCallbacks {
     );
 
     final body = world.createBody(bodyDef);
+
     final shape = CircleShape()..radius = 1;
 
     final fixtureDef = FixtureDef(
@@ -35,16 +35,18 @@ class Ball extends BodyComponent<BallPrototype> with ContactCallbacks {
       density: 1.0,
       friction: 0.2,
       restitution: 0.3,
-      userData: this, // Permite identificar que este corpo é a Ball
+      userData: this,
     );
 
     body.createFixture(fixtureDef);
+
     return body;
   }
 
   @override
   void update(double dt) {
     super.update(dt);
+
     if (_shouldReset) {
       _doReset();
       _shouldReset = false;
@@ -54,10 +56,14 @@ class Ball extends BodyComponent<BallPrototype> with ContactCallbacks {
   @override
   void beginContact(Object other, Contact contact) {
     super.beginContact(other, contact);
+
+    print("BALL CONTACT -> ${other.runtimeType}");
+
     if (other is Spike) {
+      print("SPIKE DETECTED");
       reset();
     } else if (other is Goal) {
-      // Usamos a referência ao jogo para disparar a vitória
+      print("GOAL DETECTED");
       game.onGoalReached();
     }
   }

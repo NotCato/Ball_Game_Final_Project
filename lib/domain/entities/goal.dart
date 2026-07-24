@@ -6,6 +6,7 @@ import 'ball.dart';
 class Goal extends BodyComponent with ContactCallbacks {
   @override
   final Vector2 position;
+
   final Vector2 size;
 
   Goal(this.position, this.size) {
@@ -16,8 +17,11 @@ class Goal extends BodyComponent with ContactCallbacks {
   void beginContact(Object other, Contact contact) {
     super.beginContact(other, contact);
 
+    print("GOAL CONTACT -> ${other.runtimeType}");
+
     if (other is Ball) {
-      // Informa o jogo que o nível terminou.
+      print("BALL TOUCHED GOAL");
+
       (game as BallPrototype).onGoalReached();
     }
   }
