@@ -83,100 +83,83 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       backgroundColor: Colors.black,
-      body: Center(
-        child: SizedBox(
-          width: 350,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Text(
-                "TILT MAZE",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 42,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-
-              const SizedBox(height: 20),
-
-              const Text(
-                "Inicia sessão para continuar",
-                style: TextStyle(
-                  color: Colors.white70,
-                  fontSize: 18,
-                ),
-              ),
-
-              const SizedBox(height: 40),
-
-              // Campo de email.
-              TextField(
-                controller: _emailController,
-                keyboardType: TextInputType.emailAddress,
-                decoration: const InputDecoration(
-                  labelText: "Email",
-                  border: OutlineInputBorder(),
-                  filled: true,
-                ),
-              ),
-
-              const SizedBox(height: 20),
-
-              // Campo de password.
-              TextField(
-                controller: _passwordController,
-                obscureText: true,
-                decoration: const InputDecoration(
-                  labelText: "Password",
-                  border: OutlineInputBorder(),
-                  filled: true,
-                ),
-              ),
-
-              const SizedBox(height: 30),
-
-              // Botão para iniciar sessão.
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: _isLoading ? null : _login,
-                  style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                  ),
-                  child: _isLoading
-                      ? const SizedBox(
-                          height: 22,
-                          width: 22,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2.5,
-                          ),
-                        )
-                      : const Text(
-                          "Entrar",
-                          style: TextStyle(fontSize: 18),
-                        ),
-                ),
-              ),
-
-              const SizedBox(height: 20),
-
-              // Navega para o ecrã de registo.
-              TextButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => const RegisterScreen(),
+      body: SafeArea(
+        child: Center(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(24),
+            child: SizedBox(
+              width: 350,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text(
+                    "TILT MAZE",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 42,
+                      fontWeight: FontWeight.bold,
                     ),
-                  );
-                },
-                child: const Text(
-                  "Não tens conta? Regista-te",
-                ),
+                  ),
+
+                  const SizedBox(height: 40),
+
+                  // Campo de email.
+                  TextField(
+                    controller: _emailController,
+                    decoration: const InputDecoration(
+                      labelText: "Email",
+                      border: OutlineInputBorder(),
+                      filled: true,
+                    ),
+                  ),
+
+                  const SizedBox(height: 20),
+
+                  // Campo de password.
+                  TextField(
+                    controller: _passwordController,
+                    obscureText: true,
+                    decoration: const InputDecoration(
+                      labelText: "Password",
+                      border: OutlineInputBorder(),
+                      filled: true,
+                    ),
+                  ),
+
+                  const SizedBox(height: 30),
+
+                  // Botão de login.
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: _isLoading ? null : _login,
+                      child: _isLoading
+                          ? const CircularProgressIndicator()
+                          : const Text("Entrar"),
+                    ),
+                  ),
+
+                  const SizedBox(height: 15),
+
+                  // Navega para o ecrã de registo.
+                  TextButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => const RegisterScreen(),
+                        ),
+                      );
+                    },
+                    child: const Text(
+                      "Não tens conta? Regista-te",
+                    ),
+                  ),
+                ],
               ),
-            ],
+            ),
           ),
         ),
       ),

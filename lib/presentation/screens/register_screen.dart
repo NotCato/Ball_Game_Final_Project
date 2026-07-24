@@ -76,7 +76,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
       if (!mounted) return;
 
-      // Entra no menu principal.
+      // Registo concluído com sucesso.
       Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(
@@ -107,104 +107,109 @@ class _RegisterScreenState extends State<RegisterScreen> {
     _emailController.dispose();
     _passwordController.dispose();
     _confirmPasswordController.dispose();
-
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       backgroundColor: Colors.black,
-      body: Center(
-        child: SizedBox(
-          width: 350,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Text(
-                "CRIAR CONTA",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 42,
-                  fontWeight: FontWeight.bold,
-                ),
+      body: SafeArea(
+        child: Center(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(24),
+            child: SizedBox(
+              width: 350,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text(
+                    "CRIAR CONTA",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 42,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+
+                  const SizedBox(height: 40),
+
+                  // Campo de username.
+                  TextField(
+                    controller: _usernameController,
+                    decoration: const InputDecoration(
+                      labelText: "Username",
+                      border: OutlineInputBorder(),
+                      filled: true,
+                    ),
+                  ),
+
+                  const SizedBox(height: 20),
+
+                  // Campo de email.
+                  TextField(
+                    controller: _emailController,
+                    decoration: const InputDecoration(
+                      labelText: "Email",
+                      border: OutlineInputBorder(),
+                      filled: true,
+                    ),
+                  ),
+
+                  const SizedBox(height: 20),
+
+                  // Campo de password.
+                  TextField(
+                    controller: _passwordController,
+                    obscureText: true,
+                    decoration: const InputDecoration(
+                      labelText: "Password",
+                      border: OutlineInputBorder(),
+                      filled: true,
+                    ),
+                  ),
+
+                  const SizedBox(height: 20),
+
+                  // Campo de confirmação da password.
+                  TextField(
+                    controller: _confirmPasswordController,
+                    obscureText: true,
+                    decoration: const InputDecoration(
+                      labelText: "Confirmar Password",
+                      border: OutlineInputBorder(),
+                      filled: true,
+                    ),
+                  ),
+
+                  const SizedBox(height: 30),
+
+                  // Botão de registo.
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: _isLoading ? null : _register,
+                      child: _isLoading
+                          ? const CircularProgressIndicator()
+                          : const Text("Criar Conta"),
+                    ),
+                  ),
+
+                  const SizedBox(height: 15),
+
+                  // Volta ao ecrã de login.
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    child: const Text(
+                      "Já tens conta? Inicia sessão",
+                    ),
+                  ),
+                ],
               ),
-
-              const SizedBox(height: 40),
-
-              // Campo de username.
-              TextField(
-                controller: _usernameController,
-                decoration: const InputDecoration(
-                  labelText: "Username",
-                  border: OutlineInputBorder(),
-                  filled: true,
-                ),
-              ),
-
-              const SizedBox(height: 20),
-
-              // Campo de email.
-              TextField(
-                controller: _emailController,
-                decoration: const InputDecoration(
-                  labelText: "Email",
-                  border: OutlineInputBorder(),
-                  filled: true,
-                ),
-              ),
-
-              const SizedBox(height: 20),
-
-              // Campo de password.
-              TextField(
-                controller: _passwordController,
-                obscureText: true,
-                decoration: const InputDecoration(
-                  labelText: "Password",
-                  border: OutlineInputBorder(),
-                  filled: true,
-                ),
-              ),
-
-              const SizedBox(height: 20),
-
-              // Campo de confirmação da password.
-              TextField(
-                controller: _confirmPasswordController,
-                obscureText: true,
-                decoration: const InputDecoration(
-                  labelText: "Confirmar Password",
-                  border: OutlineInputBorder(),
-                  filled: true,
-                ),
-              ),
-
-              const SizedBox(height: 30),
-
-              // Botão de registo.
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: _isLoading ? null : _register,
-                  child: _isLoading
-                      ? const CircularProgressIndicator()
-                      : const Text("Criar Conta"),
-                ),
-              ),
-
-              const SizedBox(height: 15),
-
-              // Volta ao ecrã de login.
-              TextButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                child: const Text(
-                  "Já tens conta? Inicia sessão",
-                ),
-              ),
-            ],
+            ),
           ),
         ),
       ),
