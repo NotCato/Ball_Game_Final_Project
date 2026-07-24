@@ -1,7 +1,8 @@
 import 'package:flame/flame.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'menu.dart';
+
+import 'presentation/screens/menu.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
