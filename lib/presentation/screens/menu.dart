@@ -130,11 +130,11 @@ class _MainMenuState extends State<MainMenu> {
 
                 const SizedBox(height: 20),
 
-                _buildTimeTile(1),
-                _buildTimeTile(2),
-                _buildTimeTile(3),
-                _buildTimeTile(4),
-                _buildTimeTile(5),
+                // Gera dinamicamente as linhas para todos os níveis definidos
+                ...List.generate(
+                  BallPrototype.levels.length,
+                  (index) => _buildTimeTile(index + 1),
+                ),
 
                 const SizedBox(height: 40),
 
