@@ -1,11 +1,13 @@
 import 'dart:ui';
 import 'package:flame_forge2d/flame_forge2d.dart';
 
+import '../../presentation/game/ball_prototype.dart';
 import 'ball.dart';
 
 class Goal extends BodyComponent with ContactCallbacks {
   @override
   final Vector2 position;
+
   final Vector2 size;
 
   // 0.0 = totalmente transparente, 1.0 = totalmente opaco
@@ -30,8 +32,10 @@ class Goal extends BodyComponent with ContactCallbacks {
   void beginContact(Object other, Contact contact) {
     super.beginContact(other, contact);
 
+    print("GOAL CONTACT -> ${other.runtimeType}");
+
     if (other is Ball) {
-      other.reset();
+      (game as BallPrototype).onGoalReached();
     }
   }
 
@@ -54,8 +58,8 @@ class Goal extends BodyComponent with ContactCallbacks {
 
     final fixtureDef = FixtureDef(
       shape,
-      isSensor: true, // A bola atravessa a meta mas deteta o toque
-      userData: this, // Permite identificar que este corpo é a classe Goal
+      isSensor: true,
+      userData: this,
     );
 
     body.createFixture(fixtureDef);

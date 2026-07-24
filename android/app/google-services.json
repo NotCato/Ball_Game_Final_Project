@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "457043420157",
+    "project_id": "tilt-maze-3f4c2",
+    "storage_bucket": "tilt-maze-3f4c2.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:457043420157:android:78d383d032494839202f94",
+        "android_client_info": {
+          "package_name": "com.example.ball_game"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCxQET-0yyFAE6ORj5lnVcgPlhA5F1rabQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

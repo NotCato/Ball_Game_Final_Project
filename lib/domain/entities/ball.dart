@@ -2,17 +2,17 @@ import 'dart:ui';
 import 'package:flame_forge2d/flame_forge2d.dart';
 
 import '../../presentation/game/ball_prototype.dart';
-import 'goal.dart';
 import 'spike.dart';
 
 /// Uma bola física controlada pela inclinação do dispositivo e reiniciada ao bater em espinhos.
 class Ball extends BodyComponent<BallPrototype> with ContactCallbacks {
   /// A posição de spawn usada para reiniciar a bola após colisão.
   final Vector2 initialPosition;
+
   bool _shouldReset = false;
 
   // 0.0 = transparente, 1.0 = opaco (para o caso de não teres sprite ainda)
-  double opacity = 1.0; 
+  double opacity = 1.0;
 
   Ball([Vector2? initialPosition])
       : initialPosition = initialPosition ?? Vector2(5.0, 50.0) {
@@ -28,7 +28,6 @@ class Ball extends BodyComponent<BallPrototype> with ContactCallbacks {
   }
 
   @override
-  /// Cria o corpo Forge2D da bola com uma forma circular.
   Body createBody() {
     final bodyDef = BodyDef(
       type: BodyType.dynamic,
@@ -39,6 +38,7 @@ class Ball extends BodyComponent<BallPrototype> with ContactCallbacks {
     );
 
     final body = world.createBody(bodyDef);
+
     final shape = CircleShape()..radius = 1;
 
     final fixtureDef = FixtureDef(
@@ -46,16 +46,18 @@ class Ball extends BodyComponent<BallPrototype> with ContactCallbacks {
       density: 1.0,
       friction: 0.2,
       restitution: 0.3,
-      userData: this, // Permite identificar que este corpo é a Ball
+      userData: this,
     );
 
     body.createFixture(fixtureDef);
+
     return body;
   }
 
   @override
   void update(double dt) {
     super.update(dt);
+
     if (_shouldReset) {
       _doReset();
       _shouldReset = false;
@@ -65,6 +67,8 @@ class Ball extends BodyComponent<BallPrototype> with ContactCallbacks {
   @override
   void beginContact(Object other, Contact contact) {
     super.beginContact(other, contact);
+
+    // Reinicia a bola quando toca num espinho.
     if (other is Spike) {
       reset();
     } else if (other is Goal) {
@@ -73,9 +77,12 @@ class Ball extends BodyComponent<BallPrototype> with ContactCallbacks {
     }
   }
 
-  /// Marca a bola para ser reiniciada fora do passo de física.
-  void reset() => _shouldReset = true;
+  // Marca a bola para ser reiniciada.
+  void reset() {
+    _shouldReset = true;
+  }
 
+  // Reposiciona a bola no ponto inicial.
   void _doReset() {
     body.setTransform(initialPosition, 0.0);
     body.linearVelocity = Vector2.zero();

@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
 import 'package:flame/game.dart';
@@ -9,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:sensors_plus/sensors_plus.dart';
 
 import '../../data/datasources/tiled_map_component.dart';
+import '../../data/services/firestore_service.dart';
 import '../../domain/entities/ball.dart';
 
 const double deadzone = 0.7;
@@ -34,7 +36,9 @@ class BallPrototype extends Forge2DGame with TapCallbacks {
   double elapsedTime = 0;
   bool levelCompleted = false;
 
-  // Construtor que recebe o índice (padrão é 0 - Test_level)
+  // Serviço do Firestore.
+  final FirestoreService _firestoreService = FirestoreService();
+
   BallPrototype({this.levelIndex = 0})
       : super(
           gravity: Vector2.zero(),
@@ -108,11 +112,23 @@ class BallPrototype extends Forge2DGame with TapCallbacks {
         "⏱ ${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}";
   }
 
-  // Chamado quando a bola toca na meta
-  void onGoalReached() {
+  // Chamado quando a bola chega à meta.
+  Future<void> onGoalReached() async {
+    print(">>> ON GOAL REACHED <<<");
+
     if (levelCompleted) return;
 
     levelCompleted = true;
+
+    final user = FirebaseAuth.instance.currentUser;
+
+    if (user != null) {
+      await _firestoreService.saveBestTime(
+        uid: user.uid,
+        level: levelIndex + 1,
+        time: elapsedTime,
+      );
+    }
 
     final minutes = elapsedTime ~/ 60;
     final seconds = (elapsedTime % 60).floor();
@@ -120,6 +136,7 @@ class BallPrototype extends Forge2DGame with TapCallbacks {
     _showVictoryScreen(minutes, seconds);
   }
 
+  // Mostra o ecrã de vitória.
   void _showVictoryScreen(int minutes, int seconds) {
     // Para a bola
     world.gravity = Vector2.zero();
@@ -139,9 +156,11 @@ class BallPrototype extends Forge2DGame with TapCallbacks {
       ),
     );
 
-    String message = "🏆 NÍVEL COMPLETO!\n\n⏱ ${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}";
+    String message =
+        "🏆 NÍVEL COMPLETO!\n\n⏱ ${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}";
+
     String subMessage = (levelIndex < levels.length - 1)
-        ? "\n\nClica no ecrã para o PRÓXIMO NÍVEL" 
+        ? "\n\nClica no ecrã para o PRÓXIMO NÍVEL"
         : "\n\nPARABÉNS! Completaste o jogo!";
 
     // Mensagem de Vitória
