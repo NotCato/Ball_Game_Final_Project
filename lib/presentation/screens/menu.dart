@@ -20,7 +20,7 @@ class _MainMenuState extends State<MainMenu> {
   // Serviço do Firestore.
   final FirestoreService _firestoreService = FirestoreService();
 
-  // Guarda os melhores tempos do utilizador.
+  // Melhores tempos do utilizador.
   Map<String, dynamic> _bestTimes = {};
 
   @override
@@ -29,7 +29,7 @@ class _MainMenuState extends State<MainMenu> {
     _loadBestTimes();
   }
 
-  // Obtém os melhores tempos.
+  // Carrega os melhores tempos.
   Future<void> _loadBestTimes() async {
     final user = _authService.currentUser;
 
@@ -45,7 +45,7 @@ class _MainMenuState extends State<MainMenu> {
     });
   }
 
-  // Termina a sessão.
+  // Termina sessão.
   Future<void> _logout() async {
     await _authService.logout();
 
@@ -60,7 +60,7 @@ class _MainMenuState extends State<MainMenu> {
     );
   }
 
-  // Cria uma linha para cada nível.
+  // Cria uma linha dos melhores tempos.
   Widget _buildTimeTile(int level) {
     final value = _bestTimes['level_$level'];
 
@@ -86,14 +86,14 @@ class _MainMenuState extends State<MainMenu> {
     );
   }
 
-  @override
+    @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
       body: SafeArea(
         child: Center(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.all(24),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -138,7 +138,6 @@ class _MainMenuState extends State<MainMenu> {
 
                 const SizedBox(height: 40),
 
-                // Inicia o jogo.
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(
@@ -146,8 +145,8 @@ class _MainMenuState extends State<MainMenu> {
                       vertical: 20,
                     ),
                   ),
-                  onPressed: () {
-                    Navigator.push(
+                  onPressed: () async {
+                    await Navigator.push(
                       context,
                       MaterialPageRoute(
                         builder: (_) => GameWidget(
@@ -155,6 +154,8 @@ class _MainMenuState extends State<MainMenu> {
                         ),
                       ),
                     );
+
+                    await _loadBestTimes();
                   },
                   child: const Text(
                     "JOGAR",
@@ -164,7 +165,6 @@ class _MainMenuState extends State<MainMenu> {
 
                 const SizedBox(height: 20),
 
-                // Fecha a sessão.
                 ElevatedButton(
                   onPressed: _logout,
                   style: ElevatedButton.styleFrom(
