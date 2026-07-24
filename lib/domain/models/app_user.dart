@@ -9,10 +9,14 @@ class AppUser {
   // Email da conta.
   final String email;
 
+  // Melhores tempos por nível.
+  final Map<String, dynamic> bestTimes;
+
   const AppUser({
     required this.uid,
     required this.username,
     required this.email,
+    this.bestTimes = const {},
   });
 
   // Cria um AppUser a partir dos dados do Firestore.
@@ -24,6 +28,9 @@ class AppUser {
       uid: uid,
       username: data['username'] ?? '',
       email: data['email'] ?? '',
+      bestTimes: Map<String, dynamic>.from(
+        data['bestTimes'] ?? {},
+      ),
     );
   }
 
@@ -32,6 +39,7 @@ class AppUser {
     return {
       'username': username,
       'email': email,
+      'bestTimes': bestTimes,
     };
   }
 
@@ -39,16 +47,18 @@ class AppUser {
   AppUser copyWith({
     String? username,
     String? email,
+    Map<String, dynamic>? bestTimes,
   }) {
     return AppUser(
       uid: uid,
       username: username ?? this.username,
       email: email ?? this.email,
+      bestTimes: bestTimes ?? this.bestTimes,
     );
   }
 
   @override
   String toString() {
-    return 'AppUser(uid: $uid, username: $username, email: $email)';
+    return 'AppUser(uid: $uid, username: $username, email: $email, bestTimes: $bestTimes)';
   }
 }
