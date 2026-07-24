@@ -21,8 +21,6 @@ class BallPrototype extends Forge2DGame with TapCallbacks {
     'level_3.tmx',
     'level_4.tmx',
     'level_5.tmx',
-    'level_6.tmx',
-    'level_7.tmx',    
   ];
 
   final int levelIndex; // Índice do nível atual
