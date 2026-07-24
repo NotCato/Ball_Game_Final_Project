@@ -1,3 +1,4 @@
+import 'dart:ui';
 import 'package:flame_forge2d/flame_forge2d.dart';
 
 import '../../presentation/game/ball_prototype.dart';
@@ -10,10 +11,20 @@ class Ball extends BodyComponent<BallPrototype> with ContactCallbacks {
   final Vector2 initialPosition;
   bool _shouldReset = false;
 
+  // 0.0 = transparente, 1.0 = opaco (para o caso de não teres sprite ainda)
+  double opacity = 1.0; 
+
   Ball([Vector2? initialPosition])
       : initialPosition = initialPosition ?? Vector2(5.0, 50.0) {
-    debugMode = true;
     priority = 10; // Garante que a bola é desenhada por cima do mapa
+  }
+
+  @override
+  void render(Canvas canvas) {
+    if (opacity > 0) {
+      final paint = Paint()..color = const Color(0xFFFFFFFF).withOpacity(opacity);
+      canvas.drawCircle(Offset.zero, 1.0, paint); // 1.0 é o raio definido no createBody
+    }
   }
 
   @override

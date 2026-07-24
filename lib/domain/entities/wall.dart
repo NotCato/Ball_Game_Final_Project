@@ -1,3 +1,4 @@
+import 'dart:ui';
 import 'package:flame_forge2d/flame_forge2d.dart';
 
 class Wall extends BodyComponent {
@@ -5,8 +6,22 @@ class Wall extends BodyComponent {
   final Vector2 position;
   final Vector2 size;
 
+  // 0.0 = totalmente transparente, 1.0 = totalmente opaco
+  double opacity = 0.0;
+
   Wall(this.position, this.size) {
-    debugMode = true;
+    priority = 0;
+  }
+
+  @override
+  void render(Canvas canvas) {
+    if (opacity > 0) {
+      final paint = Paint()..color = const Color(0xFFFFFFFF).withOpacity(opacity);
+      canvas.drawRect(
+        Rect.fromCenter(center: Offset.zero, width: size.x, height: size.y),
+        paint,
+      );
+    }
   }
 
   @override

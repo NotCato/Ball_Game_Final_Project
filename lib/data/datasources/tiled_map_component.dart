@@ -18,9 +18,10 @@ class TiledMapComponent extends Component with HasGameReference<Forge2DGame> {
   @override
   Future<void> onLoad() async {
     final tiledMap = await TiledComponent.load(
-      mapName, // Usa o nome passado no construtor
+      mapName,
       Vector2.all(56) * scale,
     );
+    tiledMap.priority = 5; // Fica por cima das hitboxes (0) e por baixo da bola (10)
 
     add(tiledMap);
 
