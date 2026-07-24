@@ -1,13 +1,13 @@
 import 'package:flame_forge2d/flame_forge2d.dart';
 
 import '../../presentation/game/ball_prototype.dart';
-import 'goal.dart';
 import 'spike.dart';
 
-/// Uma bola física controlada pela inclinação do dispositivo e reiniciada ao bater em espinhos.
+/// Bola física controlada pela inclinação do dispositivo.
 class Ball extends BodyComponent<BallPrototype> with ContactCallbacks {
-  /// A posição de spawn usada para reiniciar a bola após colisão.
+  // Posição inicial da bola.
   final Vector2 initialPosition;
+
   bool _shouldReset = false;
 
   Ball([Vector2? initialPosition])
@@ -57,22 +57,20 @@ class Ball extends BodyComponent<BallPrototype> with ContactCallbacks {
   void beginContact(Object other, Contact contact) {
     super.beginContact(other, contact);
 
-    print("BALL CONTACT -> ${other.runtimeType}");
-
+    // Reinicia a bola quando toca num espinho.
     if (other is Spike) {
-      print("SPIKE DETECTED");
       reset();
-    } else if (other is Goal) {
-      print("GOAL DETECTED");
-      game.onGoalReached();
     }
   }
 
-  /// Marca a bola para ser reiniciada fora do passo de física.
-  void reset() => _shouldReset = true;
+  // Marca a bola para ser reiniciada.
+  void reset() {
+    _shouldReset = true;
+  }
 
+  // Reposiciona a bola no ponto inicial.
   void _doReset() {
-    body.setTransform(initialPosition, 0.0);
+    body.setTransform(initialPosition, 0);
     body.linearVelocity = Vector2.zero();
     body.angularVelocity = 0;
   }
