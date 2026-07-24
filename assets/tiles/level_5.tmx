@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.10" tiledversion="1.12.2" orientation="orthogonal" renderorder="right-down" width="43" height="20" tilewidth="56" tileheight="56" infinite="0" nextlayerid="5" nextobjectid="190">
  <tileset firstgid="1" name="tiles-fridge" tilewidth="56" tileheight="56" tilecount="100" columns="10">
-  <image source="ballgame/Ball_Game_Final_Project/assets/images/tiles-fridge.png" width="560" height="560"/>
+  <image source="../images/tiles-fridge.png" width="560" height="560"/>
  </tileset>
- <tileset firstgid="101" source="ballgame/Ball_Game_Final_Project/assets/tiles/espinho.tsx"/>
+ <tileset firstgid="101" source="espinho.tsx"/>
  <objectgroup id="5" name="spawn">
   <object id="91" x="142" y="558"/>
  </objectgroup>
