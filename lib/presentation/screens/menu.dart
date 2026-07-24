@@ -20,7 +20,7 @@ class _MainMenuState extends State<MainMenu> {
   // Serviço do Firestore.
   final FirestoreService _firestoreService = FirestoreService();
 
-  // Melhores tempos do utilizador.
+  // Guarda os melhores tempos.
   Map<String, dynamic> _bestTimes = {};
 
   @override
@@ -29,7 +29,7 @@ class _MainMenuState extends State<MainMenu> {
     _loadBestTimes();
   }
 
-  // Carrega os melhores tempos.
+  // Carrega os melhores tempos do utilizador.
   Future<void> _loadBestTimes() async {
     final user = _authService.currentUser;
 
@@ -60,7 +60,7 @@ class _MainMenuState extends State<MainMenu> {
     );
   }
 
-  // Cria uma linha dos melhores tempos.
+  // Constrói uma linha para um nível.
   Widget _buildTimeTile(int level) {
     final value = _bestTimes['level_$level'];
 
@@ -86,14 +86,14 @@ class _MainMenuState extends State<MainMenu> {
     );
   }
 
-    @override
+   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
       body: SafeArea(
         child: Center(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24),
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(24),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -155,7 +155,8 @@ class _MainMenuState extends State<MainMenu> {
                       ),
                     );
 
-                    await _loadBestTimes();
+                    // Atualiza os tempos quando regressa do jogo.
+                    _loadBestTimes();
                   },
                   child: const Text(
                     "JOGAR",
