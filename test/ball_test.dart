@@ -5,6 +5,7 @@ import 'package:flame_prototype/domain/entities/ball.dart';
 import 'package:flame_prototype/domain/entities/goal.dart';
 import 'package:flame_prototype/domain/entities/spike.dart';
 
+// Uma subclasse da Ball para testar se o método reset() é chamado corretamente.
 class TestBall extends Ball {
   bool resetCalled = false;
 
