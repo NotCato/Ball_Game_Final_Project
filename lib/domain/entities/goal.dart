@@ -1,5 +1,6 @@
 import 'package:flame_forge2d/flame_forge2d.dart';
 
+import '../../presentation/game/ball_prototype.dart';
 import 'ball.dart';
 
 class Goal extends BodyComponent with ContactCallbacks {
@@ -16,7 +17,8 @@ class Goal extends BodyComponent with ContactCallbacks {
     super.beginContact(other, contact);
 
     if (other is Ball) {
-      other.reset();
+      // Informa o jogo que o nível terminou.
+      (game as BallPrototype).onGoalReached();
     }
   }
 
@@ -39,8 +41,8 @@ class Goal extends BodyComponent with ContactCallbacks {
 
     final fixtureDef = FixtureDef(
       shape,
-      isSensor: true, // A bola atravessa a meta mas deteta o toque
-      userData: this, // Permite identificar que este corpo é a classe Goal
+      isSensor: true,
+      userData: this,
     );
 
     body.createFixture(fixtureDef);
