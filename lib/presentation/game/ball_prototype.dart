@@ -60,8 +60,9 @@ class BallPrototype extends Forge2DGame with TapCallbacks {
     // Cronómetro
     timerText = TextComponent(
       text: "⏱ 00:00",
-      position: Vector2(25, 20),
+      position: Vector2(40, 40),
       priority: 100,
+      anchor: Anchor.topLeft,
       textRenderer: TextPaint(
         style: const TextStyle(
           color: Colors.white,
@@ -71,7 +72,7 @@ class BallPrototype extends Forge2DGame with TapCallbacks {
       ),
     );
 
-    add(timerText);
+    camera.viewport.add(timerText);
     
     // Sensor
     _accelerometerSubscription =
@@ -125,11 +126,14 @@ class BallPrototype extends Forge2DGame with TapCallbacks {
     ball.body.linearVelocity = Vector2.zero();
     ball.body.angularVelocity = 0;
 
+    final viewportSize = camera.viewport.size;
+
     // Fundo escuro
-    add(
+    camera.viewport.add(
       RectangleComponent(
-        position: Vector2.zero(),
-        size: size,
+        position: viewportSize / 2,
+        size: viewportSize,
+        anchor: Anchor.center,
         paint: Paint()..color = Colors.black.withValues(alpha: 0.75),
         priority: 500,
       ),
@@ -141,11 +145,11 @@ class BallPrototype extends Forge2DGame with TapCallbacks {
         : "\n\nPARABÉNS! Completaste o jogo!";
 
     // Mensagem de Vitória
-    add(
+    camera.viewport.add(
       TextComponent(
         text: message + subMessage,
         anchor: Anchor.center,
-        position: size / 2,
+        position: viewportSize / 2,
         priority: 501,
         textRenderer: TextPaint(
           style: const TextStyle(
