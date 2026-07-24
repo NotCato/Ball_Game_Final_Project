@@ -29,44 +29,69 @@ class FirestoreService {
     required int level,
     required double time,
   }) async {
-    final doc =
-        await _firestore.collection('users').doc(uid).get();
+    try {
+      print("========== SAVE BEST TIME ==========");
+      print("UID: $uid");
+      print("Level: $level");
+      print("Time: $time");
 
-    final data = doc.data();
+      final doc = await _firestore.collection('users').doc(uid).get();
 
-    Map<String, dynamic> bestTimes = {};
+      if (!doc.exists) {
+        print("ERRO: Documento do utilizador não existe.");
+        return;
+      }
 
-    if (data != null && data['bestTimes'] != null) {
-      bestTimes = Map<String, dynamic>.from(data['bestTimes']);
-    }
+      final data = doc.data();
 
-    final key = 'level_$level';
+      Map<String, dynamic> bestTimes = {};
 
-    // Atualiza apenas se o tempo for melhor.
-    if (!bestTimes.containsKey(key) || time < bestTimes[key]) {
-      bestTimes[key] = time;
+      if (data != null && data['bestTimes'] != null) {
+        bestTimes = Map<String, dynamic>.from(data['bestTimes']);
+      }
 
-      await _firestore.collection('users').doc(uid).update({
-        'bestTimes': bestTimes,
-      });
+      final key = 'level_$level';
+
+      if (!bestTimes.containsKey(key) ||
+          time < (bestTimes[key] as num).toDouble()) {
+        bestTimes[key] = time;
+
+        await _firestore.collection('users').doc(uid).update({
+          'bestTimes': bestTimes,
+        });
+
+        print("Recorde atualizado!");
+      } else {
+        print("O recorde já era melhor.");
+      }
+
+      print("====================================");
+    } catch (e) {
+      print("ERRO AO GUARDAR O TEMPO:");
+      print(e);
     }
   }
 
   // Obtém todos os melhores tempos.
   Future<Map<String, dynamic>> getBestTimes(String uid) async {
-    final doc =
-        await _firestore.collection('users').doc(uid).get();
+    try {
+      final doc = await _firestore.collection('users').doc(uid).get();
 
-    if (!doc.exists || doc.data() == null) {
+      if (!doc.exists || doc.data() == null) {
+        return {};
+      }
+
+      final data = doc.data()!;
+
+      if (data['bestTimes'] == null) {
+        return {};
+      }
+
+      return Map<String, dynamic>.from(data['bestTimes']);
+    } catch (e) {
+      print("ERRO AO LER OS TEMPOS:");
+      print(e);
       return {};
     }
-
-    final data = doc.data()!;
-
-    if (data['bestTimes'] == null) {
-      return {};
-    }
-
-    return Map<String, dynamic>.from(data['bestTimes']);
   }
 }
