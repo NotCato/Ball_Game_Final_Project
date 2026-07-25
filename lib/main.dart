@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
+import 'package:wakelock_plus/wakelock_plus.dart';
 import 'firebase_options.dart';
 import 'presentation/screens/login_screen.dart';
 import 'presentation/screens/menu.dart';
@@ -23,8 +23,25 @@ Future<void> main() async {
   runApp(const TiltMazeApp());
 }
 
-class TiltMazeApp extends StatelessWidget {
+class TiltMazeApp extends StatefulWidget {
   const TiltMazeApp({super.key});
+
+  @override
+  State<TiltMazeApp> createState() => _TiltMazeAppState();
+}
+
+class _TiltMazeAppState extends State<TiltMazeApp> {
+  @override
+  void initState() {
+    super.initState();
+    WakelockPlus.enable();
+  }
+
+  @override
+  void dispose() {
+    WakelockPlus.disable();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
