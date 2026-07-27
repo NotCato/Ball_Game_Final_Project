@@ -1,7 +1,6 @@
 import 'package:flame/components.dart';
 import 'package:flame_forge2d/flame_forge2d.dart';
 import 'package:flame_tiled/flame_tiled.dart';
-
 import '../../domain/entities/goal.dart';
 import '../../domain/entities/spike.dart';
 import '../../domain/entities/wall.dart';

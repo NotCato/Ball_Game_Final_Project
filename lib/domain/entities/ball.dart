@@ -1,7 +1,6 @@
 import 'dart:ui';
 import 'package:flame_forge2d/flame_forge2d.dart';
-
-import '../../presentation/game/ball_prototype.dart';
+import '../../game/ball_prototype.dart';
 import 'spike.dart';
 import 'goal.dart';
 
