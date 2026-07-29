@@ -8,7 +8,7 @@ import 'package:flame_forge2d/flame_forge2d.dart';
 import 'package:flutter/material.dart';
 import 'package:sensors_plus/sensors_plus.dart';
 import '../data/datasources/tiled_map_component.dart';
-import '../domain/services/firestore_service.dart';
+import '../data/services/firestore_service.dart';
 import '../domain/entities/ball.dart';
 
 const double deadzone = 0.7;

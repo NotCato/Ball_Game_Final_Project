@@ -1,7 +1,7 @@
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
-import '../../domain/services/auth_service.dart';
-import '../../domain/services/firestore_service.dart';
+import '../../data/services/auth_service.dart';
+import '../../data/services/firestore_service.dart';
 import '../../game/ball_prototype.dart';
 import 'login_screen.dart';
 
