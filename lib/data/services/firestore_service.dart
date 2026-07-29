@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../../data/models/app_user.dart';
+import '../models/app_user.dart';
 
 /// Serviço responsável pelas operações no Firestore.
 class FirestoreService {
